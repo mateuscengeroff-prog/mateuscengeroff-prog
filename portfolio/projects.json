@@ -1,0 +1,147 @@
+{
+  "_readme": "Three featured projects receive full case studies; Gym is a brief entry in Earlier work. Change project statuses only after validating milestones; run python scripts/build.py after edits.",
+  "_verified": "2026-10-29: Gym PR #1 merged into main (merge commit 2ce00d8ad459f3b1a7a553d4fcef4f2bb91ed2c6), GitHub Actions 4/4 Python jobs successful; Windows manual validation pending. Other projects checked against their branches and PRs on 2026-10-29.",
+  "status_scale": [
+    "planned",
+    "prototype",
+    "in-development",
+    "under-review",
+    "completed"
+  ],
+  "projects": [
+    {
+      "slug": "acc",
+      "name": "Agent Command Center",
+      "branch_label": "agent-command-center",
+      "status": "in-development",
+      "status_note": "The core runs on main with passing CI on Linux and Windows. About 60 follow-up pull requests are still drafts. It has not been tested with a real AI agent on a physical machine yet.",
+      "summary": "A local dashboard that queues coding tasks, gives each one an isolated Git worktree and keeps every change on its own branch for human review.",
+      "stack": [
+        "Python",
+        "FastAPI",
+        "SQLite",
+        "Git worktrees",
+        "pytest",
+        "GitHub Actions"
+      ],
+      "on_main": [
+        "FastAPI app and dashboard that only accept requests addressed to localhost",
+        "Task queue with status and logs stored in SQLite, plus cancel and pause",
+        "One branch and one Git worktree per task; the orchestrator never pushes, merges or deploys",
+        "Tests passing in CI on Linux and Windows against a simulated agent"
+      ],
+      "in_review": [
+        "Adapters for real agents, crash recovery, stronger isolation and a Windows launcher, spread across about 60 draft pull requests"
+      ],
+      "role": "Personal project. I came up with the idea and set the requirements, priorities and safety rules. AI coding agents write most of the code through draft pull requests, and nothing reaches main without my approval.",
+      "challenges": [
+        "Giving an agent a working copy without giving it a path to main",
+        "Keeping simulated CI results separate from real validation on a physical machine"
+      ],
+      "visibility": "private",
+      "repo": null,
+      "demo": null,
+      "featured": true,
+      "pitch": "Queues coding tasks for AI agents, gives each its own Git worktree and holds every change at a human review gate."
+    },
+    {
+      "slug": "community",
+      "name": "Collaborative Web Platform",
+      "branch_label": "community-platform",
+      "status": "in-development",
+      "status_note": "22 pull requests are merged into integration branches, none into main yet. Not deployed.",
+      "summary": "A mobile-first community web app with posts, a paginated feed and shared boards where members propose clues and the author accepts them.",
+      "stack": [
+        "Next.js",
+        "React",
+        "TypeScript",
+        "Tailwind CSS",
+        "Supabase",
+        "Playwright"
+      ],
+      "on_main": [],
+      "main_note": "Only the project scaffold so far. The features below live on integration branches.",
+      "in_review": [
+        "Email sign-up, sign-in and password reset with Supabase Auth",
+        "Posts, likes and comments in a paginated feed",
+        "Database schema and row-level security policies on every table, managed as SQL migrations",
+        "Unit, end-to-end and schema contract tests with Playwright"
+      ],
+      "role": "Team project with a friend. I plan the work in rounds, write the requirements, split tasks across branches for my teammate and AI coding agents, and decide what gets merged.",
+      "challenges": [
+        "Writing row-level security rules so users can only change their own content",
+        "Testing auth flows without depending on a live backend"
+      ],
+      "visibility": "private",
+      "repo": null,
+      "demo": null,
+      "featured": true,
+      "pitch": "A mobile-first community app: posts, a paginated feed and shared boards where members propose clues."
+    },
+    {
+      "slug": "vault",
+      "name": "VAULT//SHIFT",
+      "branch_label": "vault-shift",
+      "status": "prototype",
+      "status_note": "Server-side combat and the arena are on main. The core match loop and Blender models are in draft pull requests. Multiplayer, mobile and controller testing are pending. Not published.",
+      "summary": "A multiplayer sci-fi arena game for Roblox. The design: two teams fight over energy cores while reshaping the map.",
+      "stack": [
+        "Luau",
+        "Roblox Studio",
+        "Rojo",
+        "Blender"
+      ],
+      "on_main": [
+        "Player-versus-player combat resolved on the server, with hit validation and rate limiting",
+        "Combat HUD, health bars and hit effects on the client",
+        "Arena map kept under version control as code through Rojo"
+      ],
+      "in_review": [
+        "Core match loop, animations, camera and weapons (draft)",
+        "Blender-made models and robot armor imported into a private test place (drafts)"
+      ],
+      "role": "Personal project. I came up with the game, write the design document and sprint goals, make the art direction calls and test builds in Roblox Studio. AI coding agents write the code through pull requests that I approve.",
+      "challenges": [
+        "Never trusting the client: range, angle and invalid input are checked on the server",
+        "Keeping edits made inside Roblox Studio in sync with the repository"
+      ],
+      "visibility": "private",
+      "repo": null,
+      "demo": null,
+      "featured": true,
+      "pitch": "A Roblox arena game where two teams fight over energy cores while the map reshapes itself."
+    },
+    {
+      "slug": "gym",
+      "name": "Gym Management System",
+      "branch_label": "gym-management-system",
+      "status": "under-review",
+      "status_note": "Startup and persistence fixes, documentation and 51 automated tests are merged into main. GitHub Actions passed on Python 3.10–3.13. Manual Windows validation is still pending.",
+      "summary": "A command-line app for managing gym members: registration, search, plan changes and reports with charts.",
+      "stack": [
+        "Python",
+        "SQLite",
+        "Matplotlib",
+        "SQL"
+      ],
+      "on_main": [
+        "Create, list, search, edit and delete members, with input validation",
+        "Reports for active and inactive members, members per plan, ages and gender, with Matplotlib charts",
+        "Schema update routine that adds a column without dropping existing data",
+        "A script that fills a demo database with fictitious members",
+        "51 automated tests, passing in CI on Python 3.10 to 3.13"
+      ],
+      "in_review": [],
+      "role": "I wrote the original application without AI assistance as a self-directed challenge. The later audit, maintenance fixes and automated tests were AI-assisted, reviewed and merged.",
+      "challenges": [
+        "Changing the database schema on an existing file without losing records",
+        "Separating input handling, database access and reports into modules"
+      ],
+      "visibility": "public",
+      "repo": "https://github.com/mateuscengeroff-prog/gym-management-system",
+      "demo": null,
+      "featured": false,
+      "note": "I developed the original application **without AI tools**, deliberately, to test my own programming skills. Later maintenance, reliability fixes and automated tests were AI-assisted and reviewed; the current code is merged, with a Windows smoke test still pending."
+    }
+  ]
+}
