@@ -1,5 +1,5 @@
 {
-  "_readme": "Single source of truth for the project cards and case studies. Edit this file, then run: python scripts/build.py. 'status' must be changed only after a validated milestone (see docs/MAINTAINING.md), never because of commit activity alone. 'on_main' lists only what is merged into the default branch; work in open pull requests goes in 'in_review'.",
+  "_readme": "Three featured projects receive full case studies; Gym is a brief entry in Earlier work. Change project statuses only after validating milestones; run python scripts/build.py after edits.",
   "_verified": "2026-10-29: Gym PR #1 merged into main (merge commit 2ce00d8ad459f3b1a7a553d4fcef4f2bb91ed2c6), GitHub Actions 4/4 Python jobs successful; Windows manual validation pending. Other projects checked against their branches and PRs on 2026-10-29.",
   "status_scale": [
     "planned",
@@ -40,7 +40,8 @@
       ],
       "visibility": "private",
       "repo": null,
-      "demo": null
+      "demo": null,
+      "featured": true
     },
     {
       "slug": "community",
@@ -72,37 +73,8 @@
       ],
       "visibility": "private",
       "repo": null,
-      "demo": null
-    },
-    {
-      "slug": "gym",
-      "name": "Gym Management System",
-      "branch_label": "gym-management-system",
-      "status": "under-review",
-      "status_note": "Startup and persistence fixes, documentation and 51 automated tests are merged into main. GitHub Actions passed on Python 3.10–3.13. Manual Windows validation is still pending.",
-      "summary": "A command-line app for managing gym members: registration, search, plan changes and reports with charts.",
-      "stack": [
-        "Python",
-        "SQLite",
-        "SQL",
-        "Matplotlib"
-      ],
-      "on_main": [
-        "Create, list, search, edit and delete members, with input validation",
-        "Reports for active and inactive members, members per plan, ages and gender, with Matplotlib charts",
-        "Schema update routine that adds a column without dropping existing data",
-        "A script that fills a demo database with fictitious members",
-        "51 automated tests, passing in CI on Python 3.10 to 3.13"
-      ],
-      "in_review": [],
-      "role": "Personal project. I wrote the original application. An AI assistant helped audit the project, fix bugs and add automated tests; I reviewed the changes and approved the merge. Manual Windows validation remains pending.",
-      "challenges": [
-        "Changing the database schema on an existing file without losing records",
-        "Separating input handling, database access and reports into modules"
-      ],
-      "visibility": "public",
-      "repo": "https://github.com/mateuscengeroff-prog/gym-management-system",
-      "demo": null
+      "demo": null,
+      "featured": true
     },
     {
       "slug": "vault",
@@ -133,7 +105,39 @@
       ],
       "visibility": "private",
       "repo": null,
-      "demo": null
+      "demo": null,
+      "featured": true
+    },
+    {
+      "slug": "gym",
+      "name": "Gym Management System",
+      "branch_label": "gym-management-system",
+      "status": "under-review",
+      "status_note": "Startup and persistence fixes, documentation and 51 automated tests are merged into main. GitHub Actions passed on Python 3.10–3.13. Manual Windows validation is still pending.",
+      "summary": "A command-line app for managing gym members: registration, search, plan changes and reports with charts.",
+      "stack": [
+        "Python",
+        "SQLite",
+        "SQL",
+        "Matplotlib"
+      ],
+      "on_main": [
+        "Create, list, search, edit and delete members, with input validation",
+        "Reports for active and inactive members, members per plan, ages and gender, with Matplotlib charts",
+        "Schema update routine that adds a column without dropping existing data",
+        "A script that fills a demo database with fictitious members",
+        "51 automated tests, passing in CI on Python 3.10 to 3.13"
+      ],
+      "in_review": [],
+      "role": "I wrote the original application without AI assistance as a self-directed challenge. The later audit, maintenance fixes and automated tests were AI-assisted, reviewed and merged.",
+      "challenges": [
+        "Changing the database schema on an existing file without losing records",
+        "Separating input handling, database access and reports into modules"
+      ],
+      "visibility": "public",
+      "repo": "https://github.com/mateuscengeroff-prog/gym-management-system",
+      "demo": null,
+      "featured": false
     }
   ]
 }
