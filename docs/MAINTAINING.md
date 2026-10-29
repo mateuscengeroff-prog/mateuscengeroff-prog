@@ -22,6 +22,8 @@ Everything visual is generated from one file: `portfolio/projects.json`.
 
 Change a status only after the milestone is validated (tests passed on a real machine, PR merged, manual check done). Commits, CI runs or agent reports alone are not enough.
 
+Put only merged work in `on_main`. Anything still in an open pull request goes in `in_review` (optionally with `review_link`). If `on_main` is empty, explain why in `main_note`.
+
 Never set `repo` on a private project. The build stops if you do.
 
 ## Activity vs. validated status

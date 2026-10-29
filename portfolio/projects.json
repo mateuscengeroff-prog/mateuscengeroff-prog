@@ -1,5 +1,6 @@
 {
-  "_readme": "Single source of truth for the project cards and case studies. Edit this file, then run: python scripts/build.py. 'status' must be changed only after a validated milestone (see docs/MAINTAINING.md), never because of commit activity alone.",
+  "_readme": "Single source of truth for the project cards and case studies. Edit this file, then run: python scripts/build.py. 'status' must be changed only after a validated milestone (see docs/MAINTAINING.md), never because of commit activity alone. 'on_main' lists only what is merged into the default branch; work in open pull requests goes in 'in_review'.",
+  "_verified": "2026-10-29: each claim checked against the repository's main branch, its open pull requests and CI runs.",
   "status_scale": ["planned", "prototype", "in-development", "under-review", "completed"],
   "projects": [
     {
@@ -7,19 +8,21 @@
       "name": "Agent Command Center",
       "branch_label": "agent-command-center",
       "status": "in-development",
-      "status_note": "Core MVP is on main. Review, isolation and recovery work sits in draft pull requests. No real AI agent is enabled yet.",
-      "summary": "A local dashboard that queues coding tasks, gives each one an isolated Git worktree and holds every change for human review.",
+      "status_note": "The core runs on main with passing CI on Linux and Windows. About 60 follow-up pull requests are still drafts. It has not been tested with a real AI agent on a physical machine yet.",
+      "summary": "A local dashboard that queues coding tasks, gives each one an isolated Git worktree and keeps every change on its own branch for human review.",
       "stack": ["Python", "FastAPI", "SQLite", "Git worktrees", "pytest", "GitHub Actions"],
-      "confirmed": [
-        "Task queue with status tracking and logs, stored in SQLite",
-        "One branch and one Git worktree per task, so tasks never share a working copy",
-        "Local-only API bound to 127.0.0.1, with no automatic push, merge or deploy",
-        "Test suite running in CI on both Linux and Windows against a simulated agent"
+      "on_main": [
+        "FastAPI app and dashboard that only accept requests addressed to localhost",
+        "Task queue with status and logs stored in SQLite, plus cancel and pause",
+        "One branch and one Git worktree per task; the orchestrator never pushes, merges or deploys",
+        "Tests passing in CI on Linux and Windows against a simulated agent"
       ],
-      "role": "Personal project. I own the product direction, architecture decisions and safety rules, and coordinate AI-assisted implementation through draft pull requests that I review before anything reaches main.",
+      "in_review": [
+        "Adapters for real agents, crash recovery, stronger isolation and a Windows launcher, spread across about 60 draft pull requests"
+      ],
+      "role": "Personal project. I came up with the idea and set the requirements, priorities and safety rules. AI coding agents write most of the code through draft pull requests, and nothing reaches main without my approval.",
       "challenges": [
-        "Letting an agent change code without ever giving it a path to main",
-        "Recovering cleanly when a task process fails halfway through",
+        "Giving an agent a working copy without giving it a path to main",
         "Keeping simulated CI results separate from real validation on a physical machine"
       ],
       "visibility": "private",
@@ -31,19 +34,20 @@
       "name": "Collaborative Web Platform",
       "branch_label": "community-platform",
       "status": "in-development",
-      "status_note": "Features are built on integration branches that are still under review. Not released.",
+      "status_note": "22 pull requests are merged into integration branches, none into main yet. Not deployed.",
       "summary": "A mobile-first community web app with posts, a paginated feed and shared boards where members propose clues and the author accepts them.",
       "stack": ["Next.js", "React", "TypeScript", "Tailwind CSS", "Supabase", "Playwright"],
-      "confirmed": [
+      "on_main": [],
+      "main_note": "Only the project scaffold so far. The features below live on integration branches.",
+      "in_review": [
         "Email sign-up, sign-in and password reset with Supabase Auth",
         "Posts, likes and comments in a paginated feed",
-        "Database schema and row-level security policies managed as SQL migrations",
-        "End-to-end and schema contract tests with Playwright"
+        "Database schema and row-level security policies on every table, managed as SQL migrations",
+        "Unit, end-to-end and schema contract tests with Playwright"
       ],
-      "role": "Team project. I contribute to authentication, the feed, data persistence and responsive interfaces, and run the branch and pull request workflow for integration rounds.",
+      "role": "Team project with a friend. I plan the work in rounds, write the requirements, split tasks across branches for my teammate and AI coding agents, and decide what gets merged.",
       "challenges": [
         "Writing row-level security rules so users can only change their own content",
-        "Keeping the feed stable while paginating and updating counts",
         "Testing auth flows without depending on a live backend"
       ],
       "visibility": "private",
@@ -55,16 +59,20 @@
       "name": "Gym Management System",
       "branch_label": "gym-management-system",
       "status": "under-review",
-      "status_note": "Being audited and fixed before it is featured as a finished project.",
+      "status_note": "A fix for a startup crash, 51 automated tests and new documentation are waiting in an open pull request. Until it is merged, main does not start.",
       "summary": "A command-line app for managing gym members: registration, search, plan changes and reports with charts.",
       "stack": ["Python", "SQLite", "SQL", "Matplotlib"],
-      "confirmed": [
-        "Create, list, search, edit and delete member records",
-        "Enrollment date recorded automatically",
-        "Reports for active and inactive members, members per plan and by gender, drawn with Matplotlib",
-        "Schema update routine that adds a new column without dropping existing data"
+      "on_main": [],
+      "main_note": "The original version, which crashes at startup because of a module that was never committed.",
+      "in_review": [
+        "Create, list, search, edit and delete members, with input validation",
+        "Reports for active and inactive members, members per plan, ages and gender, with Matplotlib charts",
+        "Schema update routine that adds a column without dropping existing data",
+        "A script that fills a demo database with fictitious members",
+        "51 automated tests, passing in CI on Python 3.10 to 3.13"
       ],
-      "role": "Personal project. I wrote most of the code.",
+      "review_link": "https://github.com/mateuscengeroff-prog/gym-management-system/pull/1",
+      "role": "Personal project. I wrote the original application. The audit, bug fixes and tests in the open pull request were done with an AI assistant and are waiting for my review.",
       "challenges": [
         "Changing the database schema on an existing file without losing records",
         "Separating input handling, database access and reports into modules"
@@ -78,16 +86,19 @@
       "name": "VAULT//SHIFT",
       "branch_label": "vault-shift",
       "status": "prototype",
-      "status_note": "Playable in Roblox Studio. Multiplayer, mobile and controller testing are still pending. Not published.",
-      "summary": "A multiplayer sci-fi arena game for Roblox where two teams fight over energy cores while reshaping the map.",
+      "status_note": "Server-side combat and the arena are on main. The core match loop and Blender models are in draft pull requests. Multiplayer, mobile and controller testing are pending. Not published.",
+      "summary": "A multiplayer sci-fi arena game for Roblox. The design: two teams fight over energy cores while reshaping the map.",
       "stack": ["Luau", "Roblox Studio", "Rojo", "Blender"],
-      "confirmed": [
-        "Melee and ranged combat resolved on the server, with hit validation and rate limiting",
+      "on_main": [
+        "Player-versus-player combat resolved on the server, with hit validation and rate limiting",
         "Combat HUD, health bars and hit effects on the client",
-        "Arena map kept under version control as code through Rojo",
-        "Blender-made models rendering in single-player test sessions"
+        "Arena map kept under version control as code through Rojo"
       ],
-      "role": "Personal project. I lead game design, art direction and sprint planning, and direct AI-assisted implementation that I play-test and review.",
+      "in_review": [
+        "Core match loop, animations, camera and weapons (draft)",
+        "Blender-made models and robot armor imported into a private test place (drafts)"
+      ],
+      "role": "Personal project. I came up with the game, write the design document and sprint goals, make the art direction calls and test builds in Roblox Studio. AI coding agents write the code through pull requests that I approve.",
       "challenges": [
         "Never trusting the client: range, angle and invalid input are checked on the server",
         "Keeping edits made inside Roblox Studio in sync with the repository"
