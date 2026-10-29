@@ -131,7 +131,7 @@ class Fonts:
             opts.name_IDs = []
             opts.notdef_outline = True
             sub = subset.Subsetter(opts)
-            f = TTFont(FONTS / FONT_FILES[key])
+            f = TTFont(FONTS / FONT_FILES[key], recalcTimestamp=False)  # deterministic output
             sub.populate(text="".join(sorted(chars)) + " ")
             sub.subset(f)
             buf = io.BytesIO()
@@ -359,8 +359,16 @@ def readme_projects(projects: list[dict]) -> str:
         out.append("**Stack:** " + ", ".join(p["stack"]))
         out.append("")
         out.append("<details>\n<summary><b>Case study</b></summary>\n")
-        out.append("**What works today**\n")
-        out += [f"- {c}" for c in p["confirmed"]]
+        out.append("**On the main branch today**\n")
+        if p["on_main"]:
+            out += [f"- {c}" for c in p["on_main"]]
+        if p.get("main_note"):
+            out.append(("\n" if p["on_main"] else "") + p["main_note"])
+        if p.get("in_review"):
+            out.append("\n**In open pull requests, not merged yet**\n")
+            out += [f"- {c}" for c in p["in_review"]]
+            if p.get("review_link"):
+                out.append(f"\nReview: [{p['review_link'].removeprefix('https://github.com/')}]({p['review_link']})")
         out.append("\n**My role**\n")
         out.append(p["role"])
         out.append("\n**Engineering challenges**\n")
