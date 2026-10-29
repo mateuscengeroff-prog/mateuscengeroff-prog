@@ -209,6 +209,8 @@ def build_hero(projects: list[dict], theme: str) -> str:
     parts.append(text(fonts, "sans", "Porto Alegre, Brazil", W - 4, 30, 15, t["muted"], "end"))
     parts.append(text(fonts, "sans", "Open to roles in Brazil and abroad", W - 4, 52, 15, t["accent"], "end"))
 
+    parts.append(f'<line x1="0" y1="214" x2="{W}" y2="214" stroke="{t["faint"]}" stroke-width="1"/>')
+
     # Graph: columns are stages on the road to main.
     y_main = 420
     col_x = [300, 470, 640, 840]
@@ -223,16 +225,16 @@ def build_hero(projects: list[dict], theme: str) -> str:
     parts.append(text(fonts, "mono", "main", W - 4, y_main + 24, 13, t["muted"], "end"))
 
     ordered = sorted(
-        [p for p in projects if p["status"] != "planned"],
+        [p for p in projects if p.get("featured", True) and p["status"] != "planned"],
         key=lambda p: STAGES.index(p["status"]), reverse=True,
     )
-    lane_y = [278, 312, 346, 380]
+    lane_y = [312, 346, 380, 414]
     for i, p in enumerate(ordered[:4]):
         stage = STAGES.index(p["status"])
         color = t["status"][p["status"]]
-        x0, y = 28 + i * 28, lane_y[i]
+        x0, y = 56 + i * 28, lane_y[i]
         x_end = col_x[stage]
-        delay = 0.6 + i * 0.25
+        delay = 0.85 + i * 0.25
         if p["status"] == "completed":
             d = branch_path(x0, y_main, y, x_end - 22) + f" Q{x_end},{y} {x_end},{y + 22} V{y_main}"
             parts.append(f'<path class="draw" style="animation-delay:{delay}s" pathLength="1" d="{d}" '
@@ -351,6 +353,13 @@ def picture(base: str, alt: str, width: int = WIDTH) -> str:
 def readme_projects(projects: list[dict]) -> str:
     out = []
     for p in projects:
+        if not p.get("featured", True):
+            out.extend([
+                "### Earlier work", "",
+                "**[Gym Management System](https://github.com/mateuscengeroff-prog/gym-management-system)** · Python · SQLite · Matplotlib · Under review", "",
+                "I developed the original application **without AI tools**, deliberately, to test my own programming skills. Later maintenance, reliability fixes and automated tests were AI-assisted and reviewed; the current code is merged, with a Windows smoke test still pending.", ""
+            ])
+            continue
         out.append(picture(f"assets/projects/{p['slug']}", f"{p['name']}: {STATUS_LABEL[p['status']]}"))
         out.append("")
         out.append(p["summary"])
@@ -358,7 +367,7 @@ def readme_projects(projects: list[dict]) -> str:
         out.append(f"**Status:** {STATUS_LABEL[p['status']]}. {p['status_note']}  ")
         out.append("**Stack:** " + ", ".join(p["stack"]))
         out.append("")
-        out.append("<details>\n<summary><b>Case study</b></summary>\n")
+        out.append("<details>\n<summary><b>Inside the project</b></summary>\n")
         out.append("**On the main branch today**\n")
         if p["on_main"]:
             out += [f"- {c}" for c in p["on_main"]]
