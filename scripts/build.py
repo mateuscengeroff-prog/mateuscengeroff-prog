@@ -713,25 +713,48 @@ def build_footer_mobile(theme: str) -> str:
     return svg_doc(W, H, "Still building", "Still building.", fonts, MOTION_CSS, "".join(s))
 
 
+
+STATIC_RULE = "*{animation:none!important;}"
+
+
+def write_svg(path: Path, svg: str) -> None:
+    """Write the animated SVG and a "-static" twin with every animation removed.
+
+    Reduced motion is chosen in the README's <picture> (evaluated by the page),
+    because a media query *inside* an SVG loaded as <img> is not reliably applied.
+    The still frame is the base pose each animation was designed around.
+    """
+    path.write_text(svg, encoding="utf-8")
+    static = svg.replace("<style>", "<style>" + STATIC_RULE, 1)
+    path.with_name(path.stem + "-static.svg").write_text(static, encoding="utf-8")
+
+
 # ---------------------------------------------------------------- README ---
 MOBILE_QUERY = "(max-width: 600px)"
 
 
 def picture(base: str, alt: str, width: int = WIDTH) -> str:
-    """Four variants: phone dark, phone light, desktop dark, desktop light (fallback).
+    """Eight variants: phone/desktop x dark/light x animated/still.
 
-    The browser takes the first <source> whose media query matches, so the phone
-    rules come first. GitHub keeps <picture>/<source media> when it sanitizes
-    the README (checked through its Markdown API).
+    The browser takes the first <source> whose media query matches, so the most
+    specific rules come first. GitHub keeps <picture>/<source media> when it
+    sanitizes the README (checked through its Markdown API).
     """
-    return (
-        "<picture>\n"
-        f'  <source media="{MOBILE_QUERY} and (prefers-color-scheme: dark)" srcset="{base}-mobile-dark.svg">\n'
-        f'  <source media="{MOBILE_QUERY}" srcset="{base}-mobile-light.svg">\n'
-        f'  <source media="(prefers-color-scheme: dark)" srcset="{base}-dark.svg">\n'
-        f'  <img src="{base}-light.svg" width="{width}" alt="{escape(alt, quote=True)}">\n'
-        "</picture>"
-    )
+    rm, dark, ph = "(prefers-reduced-motion: reduce)", "(prefers-color-scheme: dark)", MOBILE_QUERY
+    rows = [
+        (f"{ph} and {rm} and {dark}", "-mobile-dark-static"),
+        (f"{ph} and {rm}", "-mobile-light-static"),
+        (f"{ph} and {dark}", "-mobile-dark"),
+        (ph, "-mobile-light"),
+        (f"{rm} and {dark}", "-dark-static"),
+        (rm, "-light-static"),
+        (dark, "-dark"),
+    ]
+    out = ["<picture>"]
+    out += [f'  <source media="{q}" srcset="{base}{suffix}.svg">' for q, suffix in rows]
+    out.append(f'  <img src="{base}-light.svg" width="{width}" alt="{escape(alt, quote=True)}">')
+    out.append("</picture>")
+    return "\n".join(out)
 
 
 def replace_picture(readme: str, base: str) -> str:
@@ -801,16 +824,14 @@ def main() -> None:
 
     (ASSETS / "projects").mkdir(parents=True, exist_ok=True)
     for theme in THEMES:
-        (ASSETS / f"hero-{theme}.svg").write_text(build_hero(projects, theme), encoding="utf-8")
-        (ASSETS / f"footer-{theme}.svg").write_text(build_footer(theme), encoding="utf-8")
-        (ASSETS / f"hero-mobile-{theme}.svg").write_text(build_hero_mobile(projects, theme), encoding="utf-8")
-        (ASSETS / f"footer-mobile-{theme}.svg").write_text(build_footer_mobile(theme), encoding="utf-8")
+        write_svg(ASSETS / f"hero-{theme}.svg", build_hero(projects, theme))
+        write_svg(ASSETS / f"footer-{theme}.svg", build_footer(theme))
+        write_svg(ASSETS / f"hero-mobile-{theme}.svg", build_hero_mobile(projects, theme))
+        write_svg(ASSETS / f"footer-mobile-{theme}.svg", build_footer_mobile(theme))
         featured = [p for p in projects if p.get("featured", True)]
         for i, p in enumerate(featured, start=1):
-            (ASSETS / "projects" / f"{p['slug']}-{theme}.svg").write_text(
-                build_card(p, theme, i), encoding="utf-8")
-            (ASSETS / "projects" / f"{p['slug']}-mobile-{theme}.svg").write_text(
-                build_card_mobile(p, theme, i), encoding="utf-8")
+            write_svg(ASSETS / "projects" / f"{p['slug']}-{theme}.svg", build_card(p, theme, i))
+            write_svg(ASSETS / "projects" / f"{p['slug']}-mobile-{theme}.svg", build_card_mobile(p, theme, i))
 
     readme = README.read_text(encoding="utf-8")
     readme = replace_picture(readme, "assets/hero")
