@@ -27,7 +27,7 @@ def graph(fonts: Fonts, projects: list[dict], x_left: float, x_right: float, y_m
     col_x = [x_left + span * f for f in (0.36, 0.56, 0.76, 1.0)]
     parts = [f'<line x1="0" y1="{y_main}" x2="2000" y2="{y_main}" '
              f'stroke="{T["line"]}" stroke-width="2"/>']
-    ordered = sorted([p for p in projects if p["status"] != "planned"],
+    ordered = sorted([p for p in projects if p.get("featured", True) and p["status"] != "planned"],
                      key=lambda p: STAGES.index(p["status"]), reverse=True)
     for i, p in enumerate(ordered[:4]):
         color = T["status"][p["status"]]

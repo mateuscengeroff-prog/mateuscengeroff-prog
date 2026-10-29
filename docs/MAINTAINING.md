@@ -26,6 +26,8 @@ Put only merged work in `on_main`. Anything not merged into main yet (open pull 
 
 Never set `repo` on a private project. The build stops if you do.
 
+Projects with `"featured": true` get a full plate (card, figure, case study) in the order they appear in the JSON. Each plate's diagram is a function in `FIGURES` inside `scripts/build.py`; a new featured project needs its own figure, otherwise its plate shows text only. Projects with `"featured": false` appear as a short `note` under *Earlier work* and are left out of the hero and brand images.
+
 ## Activity vs. validated status
 
 - **Automatic**: GitHub's own contribution graph and pinned repositories update by themselves. Nothing in this repo needs a scheduled workflow.
