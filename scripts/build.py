@@ -365,7 +365,7 @@ def readme_projects(projects: list[dict]) -> str:
         if p.get("main_note"):
             out.append(("\n" if p["on_main"] else "") + p["main_note"])
         if p.get("in_review"):
-            out.append("\n**In open pull requests, not merged yet**\n")
+            out.append("\n**Not on main yet**\n")
             out += [f"- {c}" for c in p["in_review"]]
             if p.get("review_link"):
                 out.append(f"\nReview: [{p['review_link'].removeprefix('https://github.com/')}]({p['review_link']})")
