@@ -317,17 +317,18 @@ FIG_CAPTION = {
 }
 
 
-def fig_acc(fonts, t, x, y, w, h):
+def fig_acc(fonts, t, x, y, w, h, labels=True):
     """Tasks leave a queue, each in its own worktree, and stop at a human review gate."""
     s = []
+    lb = (lambda *a, **k: label(fonts, t, *a, **k)) if labels else (lambda *a, **k: "")
     lanes = [y + 52, y + 112, y + 172]
     qx = x + 8
-    s.append(label(fonts, t, "queue", qx, y + 18))
+    s.append(lb("queue", qx, y + 18))
     for i in range(4):
         s.append(f'<rect x="{qx}" y="{y + 34 + i * 26}" width="34" height="18" rx="3" fill="none" '
                  f'stroke="{t["line"]}" stroke-width="1.5"/>')
     gx = x + w - 104
-    s.append(label(fonts, t, "one worktree per task", x + 70, y + 18))
+    s.append(lb("one worktree per task", x + 70, y + 18))
     for ly in lanes:
         s.append(f'<path d="M{qx + 40},{y + 70} C{x + 64},{y + 70} {x + 64},{ly} {x + 88},{ly} H{gx - 8}" '
                  f'stroke="{t["line"]}" stroke-width="1.5" fill="none"/>')
@@ -335,12 +336,12 @@ def fig_acc(fonts, t, x, y, w, h):
     # the review gate
     s.append(f'<rect class="gate" x="{gx}" y="{y + 30}" width="10" height="{h - 70}" rx="2" '
              f'fill="none" stroke="{t["accent"]}" stroke-width="1.5"/>')
-    s.append(label(fonts, t, "human review", gx + 5, y + 18, "middle"))
+    s.append(lb("human review", gx + 5, y + 18, "middle"))
     s.append(f'<path d="M{gx + 10},{lanes[1]} H{x + w - 6}" stroke="{t["line"]}" stroke-width="1.5" '
              f'stroke-dasharray="3 5" fill="none"/>')
-    s.append(label(fonts, t, "main", x + w - 6, lanes[1] - 10, "end"))
-    s.append(label(fonts, t, "after", x + w - 6, lanes[1] + 22, "end"))
-    s.append(label(fonts, t, "approval", x + w - 6, lanes[1] + 36, "end"))
+    s.append(lb("main", x + w - 6, lanes[1] - 10, "end"))
+    s.append(lb("after", x + w - 6, lanes[1] + 22, "end"))
+    s.append(lb("approval", x + w - 6, lanes[1] + 36, "end"))
     # parked tasks: one waiting at the gate, one halfway
     s.append(f'<rect x="{gx - 34}" y="{lanes[0] - 9}" width="26" height="18" rx="3" fill="{t["line"]}"/>')
     s.append(f'<rect x="{x + 150}" y="{lanes[2] - 9}" width="26" height="18" rx="3" fill="{t["line"]}"/>')
@@ -355,9 +356,10 @@ def fig_acc(fonts, t, x, y, w, h):
     return "".join(s), css
 
 
-def fig_community(fonts, t, x, y, w, h):
+def fig_community(fonts, t, x, y, w, h, labels=True):
     """A phone-sized feed next to a shared board where a proposed clue gets accepted."""
     s = []
+    lb = (lambda *a, **k: label(fonts, t, *a, **k)) if labels else (lambda *a, **k: "")
     px, py, pw, ph = x + 6, y + 2, 112, h - 32
     s.append(f'<rect x="{px}" y="{py}" width="{pw}" height="{ph}" rx="16" fill="none" stroke="{t["line"]}" stroke-width="1.5"/>')
     s.append(f'<line x1="{px + 42}" y1="{py + 12}" x2="{px + pw - 42}" y2="{py + 12}" stroke="{t["line"]}" stroke-width="3" stroke-linecap="round"/>')
@@ -368,7 +370,7 @@ def fig_community(fonts, t, x, y, w, h):
         s.append(f'<line x1="{px + 32}" y1="{cy + 13}" x2="{px + 70}" y2="{cy + 13}" stroke="{t["line"]}" stroke-width="3" stroke-linecap="round"/>')
         s.append(f'<line x1="{px + 16}" y1="{cy + 28}" x2="{px + pw - 18}" y2="{cy + 28}" stroke="{t["frame"]}" stroke-width="3" stroke-linecap="round"/>')
         s.append(f'<line x1="{px + 16}" y1="{cy + 38}" x2="{px + pw - 42}" y2="{cy + 38}" stroke="{t["frame"]}" stroke-width="3" stroke-linecap="round"/>')
-    s.append(label(fonts, t, "paginated feed", px + pw / 2, py + ph + 16, "middle"))
+    s.append(lb("paginated feed", px + pw / 2, py + ph + 16, "middle"))
     # board
     bx = x + 150
     nodes = [(bx + 40, y + 52), (bx + 150, y + 30), (bx + 112, y + 118), (bx + 22, y + 160)]
@@ -379,7 +381,7 @@ def fig_community(fonts, t, x, y, w, h):
         s.append(f'<rect x="{nx - 22}" y="{ny - 14}" width="44" height="28" rx="4" fill="{t["surface"]}" stroke="{t["line"]}" stroke-width="1.5"/>')
         s.append(f'<line x1="{nx - 13}" y1="{ny - 3}" x2="{nx + 13}" y2="{ny - 3}" stroke="{t["frame"]}" stroke-width="3" stroke-linecap="round"/>')
         s.append(f'<line x1="{nx - 13}" y1="{ny + 6}" x2="{nx + 4}" y2="{ny + 6}" stroke="{t["frame"]}" stroke-width="3" stroke-linecap="round"/>')
-    s.append(label(fonts, t, "shared mystery board", bx + 8, y + h - 14))
+    s.append(lb("shared mystery board", bx + 8, y + h - 14))
     # proposed clue: slides in, gets connected, then accepted (base pose = accepted)
     cx_, cy_ = bx + 222, y + 150
     s.append(f'<line class="link" pathLength="1" x1="{nodes[2][0]}" y1="{nodes[2][1]}" x2="{cx_}" y2="{cy_}" '
@@ -388,7 +390,7 @@ def fig_community(fonts, t, x, y, w, h):
              f'stroke="{t["accent"]}" stroke-width="1.5" class="cluebox"/>'
              f'<path class="tick" d="M{cx_ - 8},{cy_} l5,5 l10,-11" stroke="{t["accent"]}" stroke-width="2" fill="none" '
              f'stroke-linecap="round" stroke-linejoin="round" pathLength="1"/></g>')
-    s.append(label(fonts, t, "clue accepted by the author", cx_ + 26, cy_ + 34, "end", t["accent"]))
+    s.append(lb("clue accepted by the author", cx_ + 26, cy_ + 34, "end", t["accent"]))
     css = (".clue{animation:clue 9s cubic-bezier(.3,0,.2,1) infinite;}"
            "@keyframes clue{0%{transform:translateX(60px);opacity:0}12%,100%{transform:none;opacity:1}}"
            ".link{stroke-dasharray:1;animation:link 9s ease-in-out infinite;}"
@@ -417,9 +419,10 @@ def _box(ox, oy, x0, y0, x1, y1, z, t, extra=""):
             + _poly(top, t["faint"], t["line"]) + "</g>")
 
 
-def fig_vault(fonts, t, x, y, w, h):
+def fig_vault(fonts, t, x, y, w, h, labels=True):
     """Isometric arena: two bases, a core in the middle and SHIFT walls that swap routes."""
     s = []
+    lb = (lambda *a, **k: label(fonts, t, *a, **k)) if labels else (lambda *a, **k: "")
     ox, oy = x + w / 2 + 10, y + 6
     G = 9
     I = lambda a, b, c=0.0: _iso(ox, oy, a, b, c)
@@ -442,11 +445,11 @@ def fig_vault(fonts, t, x, y, w, h):
     s.append(f'<path class="core" d="M{cx:.1f},{cy - 13:.1f} l9,13 l-9,13 l-9,-13 z" fill="none" stroke="{t["text"]}" stroke-width="1.5"/>')
     s.append(_box(ox, oy, 6.1, 3.8, 6.4, 6.7, 1.5, t, 'class="wallB"'))
     la = I(G, 0)
-    s.append(label(fonts, t, "team A", I(0, 2)[0] - 40, I(0, 2)[1] + 4, "end", team_a))
-    s.append(label(fonts, t, "team B", I(G, G - 2)[0] + 34, I(G, G - 2)[1] + 4, "start", team_b))
-    s.append(label(fonts, t, "walls rise and fall on SHIFT,", x, y + h - 28, "start"))
-    s.append(label(fonts, t, "swapping the open route", x, y + h - 14, "start"))
-    s.append(label(fonts, t, "energy core", cx + 14, cy - 12, "start", t["text"]))
+    s.append(lb("team A", I(0, 2)[0] - 40, I(0, 2)[1] + 4, "end", team_a))
+    s.append(lb("team B", I(G, G - 2)[0] + 34, I(G, G - 2)[1] + 4, "start", team_b))
+    s.append(lb("walls rise and fall on SHIFT,", x, y + h - 28, "start"))
+    s.append(lb("swapping the open route", x, y + h - 14, "start"))
+    s.append(lb("energy core", cx + 14, cy - 12, "start", t["text"]))
     css = (".wallA{animation:wa 10s cubic-bezier(.6,0,.3,1) infinite;}"
            "@keyframes wa{0%,40%{transform:none;opacity:1}50%,90%{transform:translateY(14px);opacity:0}100%{transform:none;opacity:1}}"
            ".wallB{opacity:0;transform:translateY(14px);animation:wb 10s cubic-bezier(.6,0,.3,1) infinite;}"
@@ -536,14 +539,210 @@ def build_footer(theme: str) -> str:
     return svg_doc(W, H, "Still building", "Still building.", fonts, MOTION_CSS, "".join(s))
 
 
+# ---------------------------------------------------------------- mobile ---
+# Phones get their own compositions instead of a shrunken 860 px sheet. They are
+# drawn on a 400 px canvas (shown at roughly 0.9x on a 360-390 px screen), so
+# the smallest text stays near 12 px. Figures are reused without their in-figure
+# labels; the same information moves into a legend set in readable text.
+MOBILE_W = 400
+
+FIG_LEGEND = {
+    "acc": ["Tasks wait in a queue", "Each task gets its own Git worktree",
+            "Every change stops at a human review gate", "Only approved work reaches main"],
+    "community": ["A paginated feed, designed for phones first",
+                  "Members propose clues on a shared board", "The author accepts the clues that fit"],
+    "vault": ["Two teams and one energy core in the middle",
+              "SHIFT raises and lowers walls, swapping the open route"],
+}
+
+
+def build_hero_mobile(projects: list[dict], theme: str) -> str:
+    t = THEMES[theme]
+    fonts = Fonts()
+    W, M = MOBILE_W, 20
+    p = []
+    y = 40
+    p.append(text(fonts, "sans", "Software engineering portfolio", M, y, 15, t["muted"], extra='class="fade"'))
+    y += 84
+    p.append(text(fonts, "serif", "Mateus", M - 3, y, 92, t["text"],
+                  extra='letter-spacing="-1.5" class="rise" style="animation-delay:.05s"'))
+    y += 82
+    p.append(text(fonts, "serif", "Engeroff", M - 3, y, 92, t["text"],
+                  extra='letter-spacing="-1.5" class="rise" style="animation-delay:.18s"'))
+    y += 46
+    for i, line in enumerate(wrap("Building real software while learning how it should be built.", "sans", 20, W - 2 * M)):
+        p.append(text(fonts, "sans", line, M, y, 20, t["text"], extra=f'class="fade" style="animation-delay:{.45 + i * .1:.2f}s"'))
+        y += 28
+    y += 8
+    for line in ("Software development intern at CABERGS", "Computer science student at Unisinos"):
+        p.append(text(fonts, "sans", line, M, y, 15, t["muted"], extra='class="fade" style="animation-delay:.7s"'))
+        y += 22
+    y += 22
+
+    # vertical branch graph, full width
+    featured = [x for x in projects if x.get("featured", True) and x["status"] != "planned"][:3]
+    tx, top = M + 6, y
+    rows = []
+    yy = top + 34
+    for proj in featured:
+        lines = wrap(proj["name"], "serif", 26, W - (tx + 54) - M)
+        rows.append((proj, yy, lines))
+        yy += 34 + 26 * len(lines) + 10
+    bottom = yy + 4
+    p.append(f'<path class="draw" style="animation-delay:.3s" pathLength="1" d="M{tx},{bottom} V{top + 6}" '
+             f'stroke="{t["line"]}" stroke-width="2" fill="none"/>')
+    p.append(f'<circle cx="{tx}" cy="{bottom}" r="4.5" fill="{t["line"]}"/>')
+    p.append(text(fonts, "mono", "main", tx + 14, bottom + 5, 13, t["muted"]))
+    for i, (proj, ry, lines) in enumerate(rows):
+        color = t["status"][proj["status"]]
+        delay = 0.7 + i * 0.28
+        fork = ry + 40
+        d = f"M{tx},{fork} C{tx},{fork - 26} {tx + 30},{ry + 18} {tx + 30},{ry}"
+        p.append(f'<path class="draw" style="animation-delay:{delay}s" pathLength="1" d="{d}" stroke="{color}" stroke-width="2" fill="none"/>')
+        p.append(f'<circle cx="{tx}" cy="{fork}" r="3.5" fill="{color}"/>')
+        p.append(f'<circle cx="{tx + 30}" cy="{ry}" r="7" fill="none" stroke="{color}" stroke-width="2" class="fade" style="animation-delay:{delay + .5}s"/>')
+        p.append(text(fonts, "mono", STATUS_LABEL[proj["status"]].lower(), tx + 52, ry - 16, 13, color,
+                      extra=f'class="fade" style="animation-delay:{delay + .5}s"'))
+        for j, line in enumerate(lines):
+            p.append(text(fonts, "serif", line, tx + 51, ry + 9 + j * 26, 26, t["text"],
+                          extra=f'class="fade" style="animation-delay:{delay + .55}s"'))
+    y = bottom + 34
+
+    # title block, full width
+    rh = 38
+    rows_tb = [("based in", "Porto Alegre, Brazil", t["text"]),
+               ("open to", "Roles in Brazil and abroad", t["accent"]),
+               ("revised", "October 2026", t["text"])]
+    p.append(f'<rect x="{M}" y="{y}" width="{W - 2 * M}" height="{rh * 3}" fill="none" stroke="{t["frame"]}"/>')
+    p.append(hairline(t, M + 92, y, M + 92, y + rh * 3))
+    for i, (k, v, c) in enumerate(rows_tb):
+        ry = y + i * rh
+        if i:
+            p.append(hairline(t, M, ry, W - M, ry))
+        p.append(text(fonts, "mono", k, M + 10, ry + 24, 13, t["muted"]))
+        p.append(text(fonts, "sans", v, M + 104, ry + 25, 15, c))
+    H = y + rh * 3 + 24
+    body = crop_marks(t, 6, 6, W - 12, H - 12) + "".join(p)
+    names = ", ".join(f'{x["name"]} ({STATUS_LABEL[x["status"]].lower()})' for x in featured)
+    return svg_doc(W, H, "Mateus Engeroff",
+                   "Mateus Engeroff, software engineering portfolio. Building real software while learning how it "
+                   "should be built. Software development intern at CABERGS and computer science student at Unisinos. "
+                   "Based in Porto Alegre, Brazil, open to roles in Brazil and abroad. "
+                   f"A vertical branch graph lists the featured projects: {names}.",
+                   fonts, MOTION_CSS, body)
+
+
+def build_card_mobile(p: dict, theme: str, index: int = 1) -> str:
+    t = THEMES[theme]
+    fonts = Fonts()
+    W, M = MOBILE_W, 20
+    color = t["status"][p["status"]]
+    s = []
+    vis = "Public repository" if p["visibility"] == "public" else "Private repository"
+    s.append(text(fonts, "mono", f"Fig. {index}", M, 32, 13, t["muted"]))
+    s.append(text(fonts, "sans", vis, W - M, 32, 14, t["muted"], "end"))
+    s.append(hairline(t, M, 46, W - M, 46))
+    y = 92
+    for line in wrap(p["name"], "serif", 38, W - 2 * M):
+        s.append(text(fonts, "serif", line, M - 2, y, 38, t["text"], extra='letter-spacing="-.5"'))
+        y += 38
+    y += 4
+    for line in wrap(p.get("pitch", p["summary"]), "sans", 16, W - 2 * M):
+        s.append(text(fonts, "sans", line, M, y, 16, t["muted"]))
+        y += 23
+    y += 12
+    css = ""
+    if p["slug"] in FIGURES:
+        fw, fh = 432, 240  # the figure's native box, same as on desktop
+        k = (W - 2 * M) / fw
+        fig, css = FIGURES[p["slug"]](fonts, t, 0, 0, fw, fh, labels=False)
+        s.append(f'<g transform="translate({M},{y}) scale({k:.4f})">{fig}</g>')
+        y += fh * k + 18
+        for item in FIG_LEGEND.get(p["slug"], []):
+            lines = wrap(item, "sans", 15, W - 2 * M - 18)
+            s.append(f'<line x1="{M}" y1="{y - 5}" x2="{M + 8}" y2="{y - 5}" stroke="{t["accent"]}" stroke-width="2"/>')
+            for line in lines:
+                s.append(text(fonts, "sans", line, M + 18, y, 15, t["text"]))
+                y += 21
+            y += 5
+        y += 4
+        s.append(text(fonts, "mono", FIG_CAPTION[p["slug"]], M, y, 12, t["muted"]))
+        y += 18
+    s.append(hairline(t, M, y, W - M, y))
+    y += 34
+    s.append(text(fonts, "sans-medium", STATUS_LABEL[p["status"]], M, y, 17, color))
+    y += 26
+    s.append(maturity_track_mobile(fonts, t, p, M + 4, y, W - 2 * M - 8))
+    H = y + 44
+    frame = f'<rect x=".5" y=".5" width="{W - 1}" height="{H - 1}" rx="3" fill="{t["surface"]}" stroke="{t["frame"]}"/>'
+    return svg_doc(W, H, p["name"], f'{p["name"]}. Status: {STATUS_LABEL[p["status"]]}. {vis}. {p["summary"]}',
+                   fonts, css, frame + "".join(s))
+
+
+def maturity_track_mobile(fonts, t, p, x, y, w) -> str:
+    color = t["status"][p["status"]]
+    s = []
+    stage = -1 if p["status"] == "planned" else STAGES.index(p["status"])
+    xs = [x + w * k / 3 for k in range(4)]
+    s.append(f'<line x1="{x}" y1="{y}" x2="{x + w}" y2="{y}" stroke="{t["line"]}" stroke-width="1.5" stroke-dasharray="3 5"/>')
+    if stage >= 0:
+        s.append(f'<line x1="{x}" y1="{y}" x2="{xs[stage]}" y2="{y}" stroke="{color}" stroke-width="2.5"/>')
+    for k, xx in enumerate(xs):
+        if k == stage:
+            s.append(f'<circle cx="{xx}" cy="{y}" r="6" fill="{t["surface"]}" stroke="{color}" stroke-width="2"/>')
+        else:
+            s.append(f'<circle cx="{xx}" cy="{y}" r="2.5" fill="{color if k < stage else t["line"]}"/>')
+    for k, (xx, name) in enumerate(zip(xs, ["prototype", "building", "review", "merged"])):
+        anchor = "start" if k == 0 else "end" if k == 3 else "middle"
+        s.append(text(fonts, "mono", name, xx, y + 24, 13, color if k == stage else t["muted"], anchor))
+    return "".join(s)
+
+
+def build_footer_mobile(theme: str) -> str:
+    t = THEMES[theme]
+    fonts = Fonts()
+    W, H = MOBILE_W, 110
+    x = 46
+    s = [crop_marks(t, 6, 6, W - 12, H - 12),
+         f'<path d="M{x},{H - 6} V44" stroke="{t["line"]}" stroke-width="2" fill="none"/>',
+         f'<circle cx="{x}" cy="40" r="7" fill="none" stroke="{t["accent"]}" stroke-width="2"/>',
+         f'<circle class="ring" cx="{x}" cy="40" r="7" fill="none" stroke="{t["accent"]}" stroke-width="1" '
+         f'style="animation-iteration-count:infinite;animation-duration:3.2s"/>',
+         text(fonts, "mono", "HEAD", x, 22, 13, t["muted"], "middle"),
+         text(fonts, "serif", "Still building.", x + 26, 50, 32, t["text"])]
+    return svg_doc(W, H, "Still building", "Still building.", fonts, MOTION_CSS, "".join(s))
+
+
 # ---------------------------------------------------------------- README ---
+MOBILE_QUERY = "(max-width: 600px)"
+
+
 def picture(base: str, alt: str, width: int = WIDTH) -> str:
+    """Four variants: phone dark, phone light, desktop dark, desktop light (fallback).
+
+    The browser takes the first <source> whose media query matches, so the phone
+    rules come first. GitHub keeps <picture>/<source media> when it sanitizes
+    the README (checked through its Markdown API).
+    """
     return (
         "<picture>\n"
+        f'  <source media="{MOBILE_QUERY} and (prefers-color-scheme: dark)" srcset="{base}-mobile-dark.svg">\n'
+        f'  <source media="{MOBILE_QUERY}" srcset="{base}-mobile-light.svg">\n'
         f'  <source media="(prefers-color-scheme: dark)" srcset="{base}-dark.svg">\n'
         f'  <img src="{base}-light.svg" width="{width}" alt="{escape(alt, quote=True)}">\n'
         "</picture>"
     )
+
+
+def replace_picture(readme: str, base: str) -> str:
+    """Rewrite a hand-placed <picture> (hero, footer) in place, keeping its alt text."""
+    pat = re.compile(r"<picture>\n(?:  <source[^\n]*\n)+  <img src=\"" + re.escape(base)
+                     + r"-light\.svg\" width=\"\d+\" alt=\"([^\"]*)\">\n</picture>")
+    m = pat.search(readme)
+    if not m:
+        raise SystemExit(f"README.md has no <picture> for {base}")
+    alt = m.group(1).replace("&quot;", '"').replace("&amp;", "&")
+    return readme[:m.start()] + picture(base, alt) + readme[m.end():]
 
 
 def readme_projects(projects: list[dict]) -> str:
@@ -604,12 +803,18 @@ def main() -> None:
     for theme in THEMES:
         (ASSETS / f"hero-{theme}.svg").write_text(build_hero(projects, theme), encoding="utf-8")
         (ASSETS / f"footer-{theme}.svg").write_text(build_footer(theme), encoding="utf-8")
+        (ASSETS / f"hero-mobile-{theme}.svg").write_text(build_hero_mobile(projects, theme), encoding="utf-8")
+        (ASSETS / f"footer-mobile-{theme}.svg").write_text(build_footer_mobile(theme), encoding="utf-8")
         featured = [p for p in projects if p.get("featured", True)]
         for i, p in enumerate(featured, start=1):
             (ASSETS / "projects" / f"{p['slug']}-{theme}.svg").write_text(
                 build_card(p, theme, i), encoding="utf-8")
+            (ASSETS / "projects" / f"{p['slug']}-mobile-{theme}.svg").write_text(
+                build_card_mobile(p, theme, i), encoding="utf-8")
 
     readme = README.read_text(encoding="utf-8")
+    readme = replace_picture(readme, "assets/hero")
+    readme = replace_picture(readme, "assets/footer")
     block = readme_projects(projects)
     new, n = re.subn(
         r"(<!-- PROJECTS:START.*?-->\n).*?(<!-- PROJECTS:END -->)",

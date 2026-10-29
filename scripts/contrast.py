@@ -1,4 +1,4 @@
-"""Check WCAG contrast of the README palette against GitHub's page backgrounds.
+"""Check WCAG contrast of the README palette against GitHub's page and the plate surfaces.
 
 Usage:  python scripts/contrast.py
 Text colours must reach 4.5:1 (normal text); line colours only need to be visible.
@@ -26,14 +26,17 @@ def ratio(a: str, b: str) -> float:
 def main() -> int:
     failed = False
     for theme, colors in THEMES.items():
-        bg = GITHUB_BG[theme]
         checks = {"text": colors["text"], "muted": colors["muted"], "accent": colors["accent"]}
         checks.update({f"status:{k}": v for k, v in colors["status"].items()})
-        for name, color in checks.items():
-            r = ratio(color, bg)
-            ok = r >= 4.5
-            failed |= not ok
-            print(f"{theme:5} {name:22} {color}  {r:5.2f}:1  {'ok' if ok else 'FAIL'}")
+        # Text sits on GitHub's page (hero, footer) and on the plate surface (project cards).
+        for bg_name, bg in (("page", GITHUB_BG[theme]), ("plate", colors["surface"])):
+            for name, color in checks.items():
+                r = ratio(color, bg)
+                ok = r >= 4.5
+                failed |= not ok
+                print(f"{theme:5} {bg_name:5} {name:22} {color} on {bg}  {r:5.2f}:1  {'ok' if ok else 'FAIL'}")
+        # Plate frame and the page behind it: non-text, informational only, reported (no threshold).
+        print(f"{theme:5} info  plate edge vs page            {ratio(colors['frame'], GITHUB_BG[theme]):5.2f}:1")
     return 1 if failed else 0
 
 
