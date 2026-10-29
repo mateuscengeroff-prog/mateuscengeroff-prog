@@ -41,7 +41,8 @@
       "visibility": "private",
       "repo": null,
       "demo": null,
-      "featured": true
+      "featured": true,
+      "pitch": "Queues coding tasks for AI agents, gives each its own Git worktree and holds every change at a human review gate."
     },
     {
       "slug": "community",
@@ -74,7 +75,8 @@
       "visibility": "private",
       "repo": null,
       "demo": null,
-      "featured": true
+      "featured": true,
+      "pitch": "A mobile-first community app: posts, a paginated feed and shared boards where members propose clues."
     },
     {
       "slug": "vault",
@@ -106,7 +108,8 @@
       "visibility": "private",
       "repo": null,
       "demo": null,
-      "featured": true
+      "featured": true,
+      "pitch": "A Roblox arena game where two teams fight over energy cores while the map reshapes itself."
     },
     {
       "slug": "gym",
@@ -118,8 +121,8 @@
       "stack": [
         "Python",
         "SQLite",
-        "SQL",
-        "Matplotlib"
+        "Matplotlib",
+        "SQL"
       ],
       "on_main": [
         "Create, list, search, edit and delete members, with input validation",
@@ -137,7 +140,8 @@
       "visibility": "public",
       "repo": "https://github.com/mateuscengeroff-prog/gym-management-system",
       "demo": null,
-      "featured": false
+      "featured": false,
+      "note": "I developed the original application **without AI tools**, deliberately, to test my own programming skills. Later maintenance, reliability fixes and automated tests were AI-assisted and reviewed; the current code is merged, with a Windows smoke test still pending."
     }
   ]
 }
