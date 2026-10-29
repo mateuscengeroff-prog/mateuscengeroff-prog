@@ -46,8 +46,18 @@ Projects with `"featured": true` get a full plate (card, figure, case study) in 
 
 Instrument Serif, JetBrains Mono and Inter, all under the SIL Open Font License (see `scripts/fonts/`). Each SVG embeds only the glyphs it uses, because GitHub shows README SVGs as images and those cannot load web fonts.
 
+## Image variants
+
+Every graphic is written in eight files: desktop or phone, dark or light, animated or still (`-static`). The README's `<picture>` picks one with media queries:
+
+- `(max-width: 600px)` serves the phone composition (400 px wide, vertical layout, figure legend in text).
+- `(prefers-color-scheme: dark)` serves the dark version.
+- `(prefers-reduced-motion: reduce)` serves the still version. This lives in `<picture>`, not only inside the SVG, because a media query inside an SVG loaded as `<img>` was not applied in Chromium.
+
+`build.py` rewrites the hero and footer `<picture>` blocks as well as the project block, so the README stays in sync. Running it twice must produce no diff; check with `git status` after a build.
+
 ## GitHub rendering limits
 
 - No JavaScript runs in a README. Interaction comes from links and `<details>` blocks.
-- SVG animation (CSS keyframes) does run inside images. The hero draws once and then stays still; `prefers-reduced-motion` turns it off.
-- Light and dark versions are switched with `<picture>` and `prefers-color-scheme`.
+- SVG animation (CSS keyframes) does run inside images. The hero draws once and then stays still; plates loop slowly. Reduced motion is handled by the still variants above.
+- GitHub keeps `<picture>`, `<source media>` (including combined queries) and `<details>` when it sanitizes the README.
