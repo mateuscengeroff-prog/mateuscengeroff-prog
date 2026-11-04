@@ -255,7 +255,7 @@ def build_hero(projects: list[dict], theme: str) -> str:
                   extra='class="fade" style="animation-delay:.75s"'))
 
     # Right: a vertical "git log --graph" of the featured work. Newest at the top.
-    featured = [x for x in projects if x.get("featured", True) and x["status"] != "planned"][:3]
+    featured = [x for x in projects if x.get("featured", True) and x["status"] != "planned"][:4]
     tx, top, bottom = 584, 40, 366
     p.append(f'<path class="draw" style="animation-delay:.3s" pathLength="1" d="M{tx},{bottom} V{top + 26}" '
              f'stroke="{t["line"]}" stroke-width="2" fill="none"/>')
@@ -263,7 +263,7 @@ def build_hero(projects: list[dict], theme: str) -> str:
              f'stroke-dasharray="2 5" fill="none" class="fade" style="animation-delay:1.3s"/>')
     p.append(f'<circle cx="{tx}" cy="{bottom}" r="4.5" fill="{t["line"]}"/>')
     p.append(label(fonts, t, "main", tx + 14, bottom + 4))
-    rows = [86, 178, 270]
+    rows = [86, 178, 270] if len(featured) <= 3 else [62, 138, 214, 290]
     for i, (proj, y) in enumerate(zip(featured, rows)):
         color = t["status"][proj["status"]]
         delay = 0.7 + i * 0.28
@@ -286,7 +286,7 @@ def build_hero(projects: list[dict], theme: str) -> str:
     bx, by, bw, rh = 568, 400, W - 574, 34
     rows_tb = [("based in", "Porto Alegre, Brazil", t["text"]),
                ("open to", "Roles in Brazil and abroad", t["accent"]),
-               ("revised", "October 2026", t["text"])]
+               ("revised", "November 2026", t["text"])]
     p.append(f'<rect x="{bx}" y="{by}" width="{bw}" height="{rh * 3}" fill="none" stroke="{t["frame"]}" '
              f'class="fade" style="animation-delay:1.2s"/>')
     p.append(hairline(t, bx + 78, by, bx + 78, by + rh * 3))
@@ -314,6 +314,7 @@ FIG_CAPTION = {
     "acc": "Diagram of the review flow, not a screenshot",
     "community": "Diagram of the main flows, not a screenshot",
     "vault": "Design sketch; the match loop is in a draft PR",
+    "mapper": "Diagram of the mapping flow, not a screenshot",
 }
 
 
@@ -459,7 +460,87 @@ def fig_vault(fonts, t, x, y, w, h, labels=True):
     return "".join(s), css
 
 
-FIGURES = {"acc": fig_acc, "community": fig_community, "vault": fig_vault}
+MAPPER_WORDS = {
+    "en": {"project": "project folder", "ro": "read-only", "mapper": "mapper",
+           "public": "public summary", "private": "private report",
+           "out": "saved outside the project, plus a ZIP"},
+    "pt": {"project": "pasta do projeto", "ro": "somente leitura", "mapper": "mapper",
+           "public": "resumo público", "private": "relatório privado",
+           "out": "salvo fora do projeto, com ZIP"},
+}
+
+
+def fig_mapper(fonts, t, x, y, w, h, labels=True, lang="en"):
+    """A read-only scan over a project tree feeds a public summary and a private report."""
+    W_ = MAPPER_WORDS[lang]
+    s = []
+    lb = (lambda *a, **k: label(fonts, t, *a, **k)) if labels else (lambda *a, **k: "")
+    # the project tree (never written to)
+    s.append(lb(f'{W_["project"]} · {W_["ro"]}', x + 8, y + 18))
+    levels = [0, 1, 1, 0, 1, 1, 0]
+    bars = [64, 78, 52, 58, 86, 44, 70]
+    rows = [y + 46 + i * 24 for i in range(len(levels))]
+    s.append(f'<path d="M{x + 14},{rows[0] + 6} V{rows[5]}" stroke="{t["frame"]}" fill="none"/>')
+    s.append(f'<path d="M{x + 14},{rows[3] + 6} V{rows[5]}" stroke="{t["frame"]}" fill="none"/>')
+    for lv, ry, bw in zip(levels, rows, bars):
+        gx = x + 8 + lv * 22
+        if lv:
+            s.append(f'<path d="M{x + 14},{ry} H{gx - 3}" stroke="{t["frame"]}" fill="none"/>')
+            s.append(f'<rect x="{gx}" y="{ry - 6}" width="9" height="12" rx="1.5" fill="none" stroke="{t["line"]}" stroke-width="1.5"/>')
+        else:
+            s.append(f'<path d="M{gx},{ry - 5} h5 l2,2 h6 v9 h-13 z" fill="{t["frame"]}" stroke="{t["line"]}" '
+                     f'stroke-width="1.5" stroke-linejoin="round"/>')
+        s.append(f'<line x1="{gx + 20}" y1="{ry}" x2="{gx + 20 + bw}" y2="{ry}" stroke="{t["frame"]}" '
+                 f'stroke-width="3" stroke-linecap="round"/>')
+    # scan line: base pose hidden, so the still frame shows the finished result
+    s.append(f'<rect class="scan" x="{x + 2}" y="{rows[0] - 1}" width="158" height="2" rx="1" '
+             f'fill="{t["accent"]}" opacity="0"/>')
+    # the mapper itself
+    mx, my = x + 196, y + 118
+    s.append(f'<path d="M{x + 160},{my} H{mx - 30}" stroke="{t["line"]}" stroke-width="1.5" '
+             f'stroke-dasharray="3 5" fill="none"/>')
+    s.append(f'<rect class="node" x="{mx - 30}" y="{my - 15}" width="60" height="30" rx="4" '
+             f'fill="{t["surface"]}" stroke="{t["accent"]}" stroke-width="1.5"/>')
+    s.append(text(fonts, "mono", W_["mapper"], mx, my + 4, 11, t["text"], "middle"))
+    # two outputs
+    sx, sw, sh = x + w - 128, 122, 70
+    tops = [y + 32, y + 140]
+    for ty in tops:
+        cy = ty + sh / 2
+        s.append(f'<path d="M{mx + 30},{my} C{mx + 60},{my} {sx - 34},{cy} {sx - 6},{cy}" '
+                 f'stroke="{t["line"]}" stroke-width="1.5" fill="none"/>')
+        s.append(f'<path d="M{sx - 11},{cy - 4} l5,4 l-5,4" stroke="{t["line"]}" stroke-width="1.5" fill="none"/>')
+        s.append(f'<path d="M{sx},{ty} h{sw - 14} l14,14 v{sh - 14} h-{sw} z" fill="{t["surface"]}" '
+                 f'stroke="{t["line"]}" stroke-width="1.5" stroke-linejoin="round"/>')
+        s.append(f'<path d="M{sx + sw - 14},{ty} v14 h14" stroke="{t["line"]}" stroke-width="1.5" fill="none"/>')
+    s.append(lb(W_["public"], sx, tops[0] - 10))
+    s.append(lb(W_["private"], sx, tops[1] - 10))
+    # public: counts only (a small histogram of file types)
+    for k, bw in enumerate([62, 38, 84, 24]):
+        fill = t["accent"] if k == 2 else t["line"]
+        s.append(f'<rect class="bar" style="animation-delay:{k * .15:.2f}s" x="{sx + 12}" y="{tops[0] + 14 + k * 12}" '
+                 f'width="{bw}" height="6" rx="1.5" fill="{fill}"/>')
+    # private: names, tree and references
+    for k, (ind, bw) in enumerate([(0, 54), (12, 62), (12, 40), (0, 70)]):
+        ry = tops[1] + 18 + k * 12
+        s.append(f'<line class="row" style="animation-delay:{k * .15:.2f}s" x1="{sx + 12 + ind}" y1="{ry}" '
+                 f'x2="{sx + 12 + ind + bw}" y2="{ry}" stroke="{t["line"]}" stroke-width="3" stroke-linecap="round"/>')
+    s.append(f'<path class="row" style="animation-delay:.6s" d="M{sx + 12},{tops[1] + 62} h18 m-5,-4 l5,4 l-5,4" '
+             f'stroke="{t["accent"]}" stroke-width="1.5" fill="none"/>')
+    s.append(lb(W_["out"], x + w - 6, y + h - 4, "end"))
+    css = (".scan{animation:scan 9s cubic-bezier(.45,0,.55,1) infinite;}"
+           f"@keyframes scan{{0%{{opacity:0;transform:none}}4%{{opacity:1}}32%{{opacity:1;transform:translateY({rows[-1] - rows[0]}px)}}"
+           f"36%,100%{{opacity:0;transform:translateY({rows[-1] - rows[0]}px)}}}}"
+           ".node{animation:node 9s ease-in-out infinite;}"
+           "@keyframes node{0%,30%{stroke-width:1.5}36%{stroke-width:3}44%,100%{stroke-width:1.5}}"
+           ".bar{transform-box:fill-box;transform-origin:left center;animation:bar 9s cubic-bezier(.2,.7,.2,1) infinite both;}"
+           "@keyframes bar{0%,38%{transform:scaleX(0)}50%,94%{transform:none}100%{transform:scaleX(0)}}"
+           ".row{animation:row 9s ease-out infinite both;}"
+           "@keyframes row{0%,44%{opacity:0}54%,94%{opacity:1}100%{opacity:0}}")
+    return "".join(s), css
+
+
+FIGURES = {"acc": fig_acc, "community": fig_community, "vault": fig_vault, "mapper": fig_mapper}
 
 
 # ------------------------------------------------------------------ card ---
@@ -553,6 +634,9 @@ FIG_LEGEND = {
                   "Members propose clues on a shared board", "The author accepts the clues that fit"],
     "vault": ["Two teams and one energy core in the middle",
               "SHIFT raises and lowers walls, swapping the open route"],
+    "mapper": ["Reads a local project without changing it",
+               "Finds technologies, folders and static references",
+               "Writes a public summary or a private report outside the project"],
 }
 
 
@@ -580,7 +664,7 @@ def build_hero_mobile(projects: list[dict], theme: str) -> str:
     y += 22
 
     # vertical branch graph, full width
-    featured = [x for x in projects if x.get("featured", True) and x["status"] != "planned"][:3]
+    featured = [x for x in projects if x.get("featured", True) and x["status"] != "planned"][:4]
     tx, top = M + 6, y
     rows = []
     yy = top + 34
@@ -612,7 +696,7 @@ def build_hero_mobile(projects: list[dict], theme: str) -> str:
     rh = 38
     rows_tb = [("based in", "Porto Alegre, Brazil", t["text"]),
                ("open to", "Roles in Brazil and abroad", t["accent"]),
-               ("revised", "October 2026", t["text"])]
+               ("revised", "November 2026", t["text"])]
     p.append(f'<rect x="{M}" y="{y}" width="{W - 2 * M}" height="{rh * 3}" fill="none" stroke="{t["frame"]}"/>')
     p.append(hairline(t, M + 92, y, M + 92, y + rh * 3))
     for i, (k, v, c) in enumerate(rows_tb):

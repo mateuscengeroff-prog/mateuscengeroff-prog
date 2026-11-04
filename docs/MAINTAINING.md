@@ -61,3 +61,7 @@ Every graphic is written in eight files: desktop or phone, dark or light, animat
 - No JavaScript runs in a README. Interaction comes from links and `<details>` blocks.
 - SVG animation (CSS keyframes) does run inside images. The hero draws once and then stays still; plates loop slowly. Reduced motion is handled by the still variants above.
 - GitHub keeps `<picture>`, `<source media>` (including combined queries) and `<details>` when it sanitizes the README.
+
+## Illustrations for project repositories
+
+`python scripts/repo_art.py mapper <folder>` draws the README illustrations of the Project Structure Mapper repository (banner, assistant transcript, public vs. private report) with the same fonts, colours and figure as the profile plate. Point `<folder>` at that repository's `docs/img`. The transcript and report excerpts are constants in the script, copied from a real run on a fictitious project; update them if the tool's messages change.

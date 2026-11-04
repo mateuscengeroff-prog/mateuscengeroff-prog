@@ -1,6 +1,6 @@
 {
-  "_readme": "Three featured projects receive full case studies; Gym is a brief entry in Earlier work. Change project statuses only after validating milestones; run python scripts/build.py after edits.",
-  "_verified": "2026-10-29: Gym PR #1 merged into main (merge commit 2ce00d8ad459f3b1a7a553d4fcef4f2bb91ed2c6), GitHub Actions 4/4 Python jobs successful; Windows manual validation pending. Other projects checked against their branches and PRs on 2026-10-29.",
+  "_readme": "Four featured projects receive full case studies; Gym is a brief entry in Earlier work. Change project statuses only after validating milestones; run python scripts/build.py after edits.",
+  "_verified": "2026-10-29: Gym PR #1 merged into main (merge commit 2ce00d8ad459f3b1a7a553d4fcef4f2bb91ed2c6), GitHub Actions 4/4 Python jobs successful; Windows manual validation pending. Other projects checked against their branches and PRs on 2026-10-29. 2026-11-04: Project Structure Mapper PRs #1 and #2 merged into main (head a8d9784); 34 unittest tests re-run and passing on Linux, Python 3.13; Windows manual validation pending.",
   "status_scale": [
     "planned",
     "prototype",
@@ -110,6 +110,38 @@
       "demo": null,
       "featured": true,
       "pitch": "A Roblox arena game where two teams fight over energy cores while the map reshapes itself."
+    },
+    {
+      "slug": "mapper",
+      "name": "Project Structure Mapper",
+      "branch_label": "project-structure-mapper",
+      "status": "under-review",
+      "status_note": "Version 2 is merged into main, with 34 automated tests passing on Linux under Python 3.8 to 3.13. The Windows launcher, drag-and-drop and folder picker still need a test on a physical Windows machine.",
+      "summary": "A local, read-only tool that maps a codebase's technologies, folders and ASP.NET Web Forms references into reports, with a step-by-step assistant in Portuguese for people who never used a terminal.",
+      "stack": [
+        "Python",
+        "Standard library only",
+        "unittest",
+        "Windows Batch"
+      ],
+      "on_main": [
+        "Guided assistant in Portuguese and a command-line mode, started by double-clicking a Windows batch file or dropping a folder on it",
+        "Public mode with counts and technologies only, and a private mode with the file tree and references for internal use",
+        "Detection for Python, Node.js and TypeScript, plus ASP.NET Web Forms pages, Master Pages, user controls and Web.config control registrations",
+        "Read-only by design: no packages, no network, no symlinks followed, and reports are refused inside the analysed folder",
+        "34 automated tests on fictitious projects, including a hash check that the analysed project is left unchanged"
+      ],
+      "in_review": [],
+      "role": "Personal project. I defined the problem, the privacy rules and the beginner-first requirements, and I review and test every change. An AI coding agent wrote most of the code through pull requests that I approved.",
+      "challenges": [
+        "Proving the tool never writes to the project it reads",
+        "Resolving Web Forms references the way IIS does: case-insensitive paths and nested Web.config scopes"
+      ],
+      "visibility": "private",
+      "repo": null,
+      "demo": null,
+      "featured": true,
+      "pitch": "Maps a codebase's structure locally, without changing or uploading a single file."
     },
     {
       "slug": "gym",
