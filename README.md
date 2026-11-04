@@ -6,7 +6,7 @@
   <source media="(prefers-reduced-motion: reduce) and (prefers-color-scheme: dark)" srcset="assets/hero-dark-static.svg">
   <source media="(prefers-reduced-motion: reduce)" srcset="assets/hero-light-static.svg">
   <source media="(prefers-color-scheme: dark)" srcset="assets/hero-dark.svg">
-  <img src="assets/hero-light.svg" width="860" alt="Mateus Engeroff, software engineering portfolio. Building real software while learning how it should be built. Software development intern at CABERGS and computer science student at Unisinos. Based in Porto Alegre, Brazil, open to roles in Brazil and abroad. A vertical branch graph lists the featured projects: Agent Command Center and Collaborative Web Platform in development, VAULT//SHIFT as a prototype, Project Structure Mapper under review.">
+  <img src="assets/hero-light.svg" width="860" alt="Mateus Engeroff, software engineering portfolio. Building real software while learning how it should be built. Software development intern at CABERGS and computer science student at Unisinos. Based in Porto Alegre, Brazil, open to roles in Brazil and abroad. A vertical branch graph lists the featured projects: Agent Command Center and Collaborative Web Platform in development, VAULT//SHIFT as a prototype, Project Structure Mapper completed.">
 </picture>
 
 <p align="center"><a href="#selected-work">Selected work</a> &nbsp; · &nbsp; <a href="#stack">Stack</a> &nbsp; · &nbsp; <a href="#now">Now</a> &nbsp; · &nbsp; <a href="#contact">Contact</a></p>
@@ -168,12 +168,12 @@ Personal project. I came up with the game, write the design document and sprint 
   <source media="(prefers-reduced-motion: reduce) and (prefers-color-scheme: dark)" srcset="assets/projects/mapper-dark-static.svg">
   <source media="(prefers-reduced-motion: reduce)" srcset="assets/projects/mapper-light-static.svg">
   <source media="(prefers-color-scheme: dark)" srcset="assets/projects/mapper-dark.svg">
-  <img src="assets/projects/mapper-light.svg" width="860" alt="Project Structure Mapper: Under review">
+  <img src="assets/projects/mapper-light.svg" width="860" alt="Project Structure Mapper: Completed">
 </picture>
 
 A local, read-only tool that maps a codebase's technologies, folders and ASP.NET Web Forms references into reports, with a step-by-step assistant in Portuguese for people who never used a terminal.
 
-**Status:** Under review. Version 2 is merged into main, with 34 automated tests passing on Linux under Python 3.8 to 3.13. The Windows launcher, drag-and-drop and folder picker still need a test on a physical Windows machine.  
+**Status:** Completed. Version 2 is merged into main, with 34 automated tests passing on Linux under Python 3.8 to 3.13, and tested by hand on a physical Windows machine.  
 **Stack:** Python, Standard library only, unittest, Windows Batch
 
 <details>
@@ -223,7 +223,6 @@ I developed the original application **without AI tools**, deliberately, to test
 - Building review and isolation workflows for the Agent Command Center
 - Developing the collaborative web platform on integration branches
 - Iterating on VAULT//SHIFT's gameplay prototype
-- Testing the Project Structure Mapper on a real Windows machine
 - Studying object-oriented C++, calculus and algebra at Unisinos
 
 ## On GitHub
