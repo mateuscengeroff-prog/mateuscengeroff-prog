@@ -38,7 +38,7 @@ Four projects that represent what I am building right now. Each plate pairs a di
 
 A local dashboard that queues coding tasks, gives each one an isolated Git worktree and keeps every change on its own branch for human review.
 
-**Status:** In development. The core runs on main with passing CI on Linux and Windows. About 60 follow-up pull requests are still drafts. It has not been tested with a real AI agent on a physical machine yet.  
+**Status:** In development. The core runs on main with passing CI on Linux and Windows. About 45 follow-up pull requests are still open as drafts. It has not been tested with a real AI agent on a physical machine yet.  
 **Stack:** Python, FastAPI, SQLite, Git worktrees, pytest, GitHub Actions
 
 <details>
@@ -49,11 +49,11 @@ A local dashboard that queues coding tasks, gives each one an isolated Git workt
 - FastAPI app and dashboard that only accept requests addressed to localhost
 - Task queue with status and logs stored in SQLite, plus cancel and pause
 - One branch and one Git worktree per task; the orchestrator never pushes, merges or deploys
-- Tests passing in CI on Linux and Windows against a simulated agent
+- API and storage tests passing in CI on Linux and Windows; no agent runs in CI
 
 **Not on main yet**
 
-- Adapters for real agents, crash recovery, stronger isolation and a Windows launcher, spread across about 60 draft pull requests
+- Adapters for real agents, crash recovery, stronger isolation and a Windows launcher, spread across about 45 open draft pull requests
 
 **My role**
 
