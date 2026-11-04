@@ -64,4 +64,11 @@ Every graphic is written in eight files: desktop or phone, dark or light, animat
 
 ## Illustrations for project repositories
 
-`python scripts/repo_art.py mapper <folder>` draws the README illustrations of the Project Structure Mapper repository (banner, assistant transcript, public vs. private report) with the same fonts, colours and figure as the profile plate. Point `<folder>` at that repository's `docs/img`. The transcript and report excerpts are constants in the script, copied from a real run on a fictitious project; update them if the tool's messages change.
+`scripts/repo_art.py` draws the README illustrations of each project repository with the same fonts, colours and figures as the profile plates. All text is English.
+
+```bash
+python scripts/repo_art.py all <folder with the cloned repositories>   # every repository
+python scripts/repo_art.py acc <repo>/docs/img                          # one repository
+```
+
+Each repository gets three illustrations in `docs/img`: a **banner** (title, pitch, figure and title block; eight variants like the plates), a **flow** of four numbered steps and a **board** with two columns. The board is built from `portfolio/projects.json` (`on_main` and `in_review`, plus `board_pending` in the script), so a status change here should be followed by a re-run there. The text of the banner and the flow lives in `SPECS` inside the script.
