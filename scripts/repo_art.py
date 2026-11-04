@@ -155,7 +155,7 @@ SPECS = {
         "title": ["Project", "Structure", "Mapper"],
         "tagline": "Understand how a codebase is organised without opening it file by file.",
         "block": [("runs on", "Windows 10/11 · Python 3.8+"), ("project", "read-only, offline"), ("version", "v2.1.0 on main")],
-        "flag": "Windows test pending",
+        "flag": "tested on Windows",
         "flow_title": "Using the assistant",
         "flow": [
             ("Start it", "Double-click INICIAR_WINDOWS.bat, or drop a project folder onto it."),
@@ -275,7 +275,7 @@ def banner_mobile(slug: str, theme: str) -> str:
         c = t["status"][p_["status"]] if key == "status" else t["text"]
         p.append(text(fonts, "sans", v, M + 96, ry + 22, 14, c))
     y += rh * len(rows) + 10
-    p.append(text(fonts, "sans", spec["flag"].capitalize(), M, y + 14, 13, t["status"][p_["status"]]))
+    p.append(text(fonts, "sans", (spec["flag"][0].upper() + spec["flag"][1:]), M, y + 14, 13, t["status"][p_["status"]]))
     H = y + 40
     body = crop_marks(t, 6, 6, W - 12, H - 12) + "".join(p)
     return svg_doc(W, H, " ".join(spec["title"]), f'{" ".join(spec["title"])}. {spec["tagline"]}',
